@@ -1,0 +1,16 @@
+import os
+from PIL import Image
+import numpy as np
+from skimage.metrics import peak_signal_noise_ratio as psnr
+
+folder_path = 'path_to_your_folder'
+
+for filename in os.listdir(folder_path):
+    if filename.endswith('.jpg') or filename.endswith('.png'):
+        img_path = os.path.join(folder_path, filename)
+        img = Image.open(img_path).convert('1')
+        img_resized = img.resize((img.width*4, img.height*4), Image.BICUBIC)
+        img = np.array(img)
+        img_resized = np.array(img_resized)
+        psnr_value = psnr(img, img_resized)
+        print(f'PSNR value for {filename} is {psnr_value}')

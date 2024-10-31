@@ -1,0 +1,24 @@
+def get_AS(masks):
+    #mask_pos = np.zeros((len(masks), h, w))
+    smes = 0
+    for i in range(len(masks)): #n个实例
+        mask = masks[i]  # torch.cuda.FloatTensor
+        #mask是tensor类型的 转换成非tensor
+        padded_mask = np.zeros(
+                    (mask.shape[0], mask.shape[1]), dtype=np.uint8)
+        # padded_mask[:, :] = mask.cpu().numpy()  # 从第二个取到倒数第二个
+        padded_mask[:, :] = mask
+        contours, _ = cv2.findContours(padded_mask, cv2.RETR_EXTERNAL,
+                                    cv2.CHAIN_APPROX_SIMPLE)  # contours, hierarchy  只检测外轮廓  压>缩水平方向，垂直方向，对角线方向的元素，
+        
+        for contour in contours:
+            if cv2.contourArea(contour) < 1:
+                continue
+            length = cv2.arcLength(curve=contour, closed=True)
+            contour_approxed = cv2.approxPolyDP(curve=contour, epsilon=1, closed=True)
+            if length > 0:
+                sm = len(contour_approxed)/math.sqrt(length)
+            else:
+                sm = 0
+            smes += sm
+    return smes/len(masks)
