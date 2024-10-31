@@ -1,5 +1,5 @@
 # LSRCAN
-Laser Stripes Residual Channel Attention Network
+Laser Stripes Residual Channel Attention Network
 
 
 ## Environment
